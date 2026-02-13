@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import Todo from "./components/Todo";
 import "./App.css";
 
 function App() {
@@ -103,51 +102,14 @@ function App() {
       <h1>Todo List</h1>
       <ul>
         {todoList.map((todo) => (
-          <li key={todo.id}>
-            <span className={todo.done ? "done" : ""}>{todo.title}</span>
-            <button
-              onClick={() => {
-                toggleDone(todo.id);
-              }}
-            >
-              Toggle
-            </button>
-            <button
-              onClick={() => {
-                deleteTodo(todo.id);
-              }}
-            >
-              ❌
-            </button>
-            {todo.comments && todo.comments.length > 0 && (
-              <>
-                <b>Comments:</b>
-                <ul>
-                  {todo.comments.map((comment) => (
-                    <li key={comment.id}>{comment.message}</li>
-                  ))}
-                </ul>
-              </>
-            )}
-            <div className="new-comment-forms">
-              <input
-                type="text"
-                value={newComments[todo.id] || ""}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setNewComments({ ...newComments, [todo.id]: value });
-                }}
-              />
-
-              <button
-                onClick={() => {
-                  addNewComment(todo.id);
-                }}
-              >
-                Add Comment
-              </button>
-            </div>
-          </li>
+          <Todo
+            key={todo.id}
+            todo={todo}
+            toggleDone={toggleDone}
+            deleteTodo={deleteTodo}
+            addNewComment={addNewComment}
+            newComments={newComments}
+          />
         ))}
       </ul>
       New:{" "}
