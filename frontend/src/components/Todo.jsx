@@ -1,4 +1,8 @@
-const Todo = ({ todo, toggleDone, deleteTodo, addNewComment, newComments }) => {
+import { useState } from "react";
+
+const TodoItem = ({ todo, toggleDone, deleteTodo, addNewComment }) => {
+  const [newComment, setNewComment] = useState("");
+
   return (
     <li>
       <span className={todo.done ? "done" : ""}>{todo.title}</span>
@@ -29,16 +33,16 @@ const Todo = ({ todo, toggleDone, deleteTodo, addNewComment, newComments }) => {
       <div className="new-comment-forms">
         <input
           type="text"
-          value={newComments[todo.id] || ""}
+          value={newComment}
           onChange={(e) => {
             const value = e.target.value;
-            setNewComments({ ...newComments, [todo.id]: value });
+            setNewComment(value);
           }}
         />
 
         <button
           onClick={() => {
-            addNewComment(todo.id);
+            addNewComment(todo.id, newComment);
           }}
         >
           Add Comment
@@ -48,4 +52,4 @@ const Todo = ({ todo, toggleDone, deleteTodo, addNewComment, newComments }) => {
   );
 };
 
-export default Todo;
+export default TodoItem;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Todo from "./components/Todo";
+import TodoItem from "./components/Todo";
 import "./App.css";
 
 function App() {
@@ -7,7 +7,6 @@ function App() {
 
   const [todoList, setTodoList] = useState([]);
   const [newTitle, setNewTitle] = useState("");
-  const [newComments, setNewComments] = useState({});
 
   useEffect(() => {
     fetchTodoList();
@@ -78,7 +77,7 @@ function App() {
     }
   }
 
-  async function addNewComment(todoId) {
+  async function addNewComment(todoId, newComment) {
     try {
       const url = `${TODOLIST_API_URL}${todoId}/comments/`;
       const response = await fetch(url, {
@@ -86,10 +85,9 @@ function App() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: newComments[todoId] || "" }),
+        body: JSON.stringify({ message: newComment }),
       });
       if (response.ok) {
-        setNewComments({ ...newComments, [todoId]: "" });
         await fetchTodoList();
       }
     } catch (error) {
@@ -102,13 +100,12 @@ function App() {
       <h1>Todo List</h1>
       <ul>
         {todoList.map((todo) => (
-          <Todo
+          <TodoItem
             key={todo.id}
             todo={todo}
             toggleDone={toggleDone}
             deleteTodo={deleteTodo}
             addNewComment={addNewComment}
-            newComments={newComments}
           />
         ))}
       </ul>
