@@ -12,6 +12,11 @@ const baseTodo = {
 
 describe("TodoItem", () => {
   it("renders with no comments correctly", () => {
+    render(<TodoItem todo={baseTodo} />);
+    expect(screen.getByText("Sample Todo")).toBeInTheDocument();
+  });
+
+  it("renders with comments correctly", () => {
     const todoWithComment = {
       ...baseTodo,
       comments: [
@@ -23,5 +28,10 @@ describe("TodoItem", () => {
     expect(screen.getByText("Sample Todo")).toBeInTheDocument();
     expect(screen.getByText("First comment")).toBeInTheDocument();
     expect(screen.getByText("Another comment")).toBeInTheDocument();
+  });
+  it("renders with no comments correctly", () => {
+    render(<TodoItem todo={baseTodo} />);
+
+    expect(screen.getByText("No comments")).toBeInTheDocument();
   });
 });

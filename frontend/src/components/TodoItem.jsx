@@ -30,6 +30,7 @@ const TodoItem = ({ todo, toggleDone, deleteTodo, addNewComment }) => {
           </ul>
         </>
       )}
+      {todo.comments.length == 0 && "No comments"}
       <div className="new-comment-forms">
         <input
           type="text"
