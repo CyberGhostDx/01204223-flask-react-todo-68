@@ -22,7 +22,7 @@ const TodoItem = ({ todo, toggleDone, deleteTodo, addNewComment }) => {
       </button>
       {todo.comments && todo.comments.length > 0 && (
         <>
-          <b>Comments:</b>
+          <b>Comments 2:</b>
           <ul>
             {todo.comments.map((comment) => (
               <li key={comment.id}>{comment.message}</li>
