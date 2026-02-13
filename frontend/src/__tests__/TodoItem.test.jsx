@@ -33,6 +33,6 @@ describe("TodoItem", () => {
 
   it("renders with no comments correctly", () => {
     render(<TodoItem todo={baseTodo} />);
-    expect(screen.getByText("Nae Econ")).toBeInTheDocument();
+    expect(screen.getByText("No comments")).toBeInTheDocument();
   });
 });
