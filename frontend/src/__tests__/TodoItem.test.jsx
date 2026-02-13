@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { expect } from "vitest";
 import TodoItem from "../components/TodoItem.jsx";
 import "@testing-library/jest-dom";
@@ -34,5 +35,34 @@ describe("TodoItem", () => {
   it("renders with no comments correctly", () => {
     render(<TodoItem todo={baseTodo} />);
     expect(screen.getByText("No comments")).toBeInTheDocument();
+  });
+
+  it("makes callback to toggleDone when Toggle button is clicked", () => {
+    const onToggleDone = vi.fn();
+    render(<TodoItem todo={baseTodo} toggleDone={onToggleDone} />);
+    const button = screen.getByRole("button", { name: /toggle/i });
+    button.click();
+    expect(onToggleDone).toHaveBeenCalledWith(baseTodo.id);
+  });
+
+  it("makes callback to deleteTodo when delete button is clicked", () => {
+    const deleteTodo = vi.fn();
+    render(<TodoItem todo={baseTodo} deleteTodo={deleteTodo} />);
+    const button = screen.getByRole("button", { name: /❌/i });
+    button.click();
+    expect(deleteTodo).toHaveBeenCalledWith(baseTodo.id);
+  });
+
+  it("makes callback to addNewComment when a new comment is added", async () => {
+    const onAddNewComment = vi.fn();
+    render(<TodoItem todo={baseTodo} addNewComment={onAddNewComment} />);
+
+    const input = screen.getByRole("textbox");
+    await userEvent.type(input, "New comment");
+
+    const button = screen.getByRole("button", { name: /Add Comment/i });
+    button.click();
+
+    expect(onAddNewComment).toHaveBeenCalledWith(baseTodo.id, "New comment");
   });
 });
