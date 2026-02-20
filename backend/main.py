@@ -1,11 +1,15 @@
 import click
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from flask_jwt_extended import (JWTManager, create_access_token,
-                                get_jwt_identity, jwt_required)
+from flask_jwt_extended import (
+    JWTManager,
+    create_access_token,
+    get_jwt_identity,
+    jwt_required,
+)
 from flask_migrate import Migrate
 
-from models import Comment, TodoItem, db
+from models import Comment, TodoItem, User, db
 
 app = Flask(__name__)
 CORS(app)
@@ -90,16 +94,15 @@ def create_user(username, full_name, password):
     click.echo(f"User {username} created successfully.")
 
 
-@app.route('/api/login/', methods=['POST'])
+@app.route("/api/login/", methods=["POST"])
 def login():
     data = request.get_json()
-    if not data or 'username' not in data or 'password' not in data:
-        return jsonify({'error': 'Username and password are required'}), 400
+    if not data or "username" not in data or "password" not in data:
+        return jsonify({"error": "Username and password are required"}), 400
 
-    user = User.query.filter_by(username=data['username']).first()
-    if not user or not user.check_password(data['password']):
-        return jsonify({'error': 'Invalid username or password'}), 401
+    user = User.query.filter_by(username=data["username"]).first()
+    if not user or not user.check_password(data["password"]):
+        return jsonify({"error": "Invalid username or password"}), 401
 
-    // ***** สร้าง token แล้วคืนค่ากลับไป
     access_token = create_access_token(identity=user.username)
     return jsonify(access_token=access_token)
