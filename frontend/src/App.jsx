@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginForm from "./components//LoginForm.jsx";
 import { AuthProvider } from "./context/AuthContext.jsx";
+import PrivateRoute from "./components/PrivateRoute.jsx";
 import "./App.css";
 import TodoList from "./components/TodoList.jsx";
 
@@ -12,7 +13,14 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<TodoList apiUrl={TODOLIST_API_URL} />} />
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <TodoList apiUrl={TODOLIST_API_URL} />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/about"
             element={
