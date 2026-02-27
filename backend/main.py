@@ -1,22 +1,18 @@
+import os
+
 import click
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from flask_jwt_extended import (
-    JWTManager,
-    create_access_token,
-    get_jwt_identity,
-    jwt_required,
-)
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from flask_migrate import Migrate
-
 from models import Comment, TodoItem, User, db
 
 app = Flask(__name__)
 CORS(app)
 
 # DB
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///todos.db"
-app.config["JWT_SECRET_KEY"] = "fdsjkfjioi2rjshr2345hrsh043j5oij5545"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 jwt = JWTManager(app)
 
 migrate = Migrate(app, db)
