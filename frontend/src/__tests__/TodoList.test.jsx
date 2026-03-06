@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
-import App from "../App.jsx";
+import TodoList from "../components/TodoList.jsx";
 import "@testing-library/jest-dom";
 
 const todoItem1 = { id: 1, title: "First todo", done: false, comments: [] };
@@ -22,9 +22,20 @@ const mockResponse = (body, ok = true) =>
     json: () => Promise.resolve(body),
   });
 
-describe("App", () => {
+vi.mock("../context/AuthContext", () => ({
+  useAuth: vi.fn(),
+}));
+
+import { useAuth } from "../context/AuthContext";
+
+describe("TodoList", () => {
   beforeEach(() => {
     vi.stubGlobal("fetch", vi.fn());
+    useAuth.mockReturnValue({
+      username: "testuser",
+      login: vi.fn(),
+      logout: vi.fn(),
+    });
   });
 
   afterEach(() => {
@@ -35,13 +46,14 @@ describe("App", () => {
   it("renders correctly", async () => {
     global.fetch.mockImplementationOnce(() => mockResponse(originalTodoList));
 
-    render(<App />);
+    render(<TodoList />);
 
     expect(await screen.findByText("First todo")).toBeInTheDocument();
     expect(await screen.findByText("Second todo")).toBeInTheDocument();
     expect(await screen.findByText("First comment")).toBeInTheDocument();
     expect(await screen.findByText("Second comment")).toBeInTheDocument();
   });
+
   it("toggles done on a todo item", async () => {
     const toggledTodoItem1 = { ...todoItem1, done: true };
 
@@ -49,7 +61,7 @@ describe("App", () => {
       .mockImplementationOnce(() => mockResponse(originalTodoList))
       .mockImplementationOnce(() => mockResponse(toggledTodoItem1));
 
-    render(<App />);
+    render(<TodoList />);
 
     expect(await screen.findByText("First todo")).not.toHaveClass("done");
 
@@ -59,5 +71,11 @@ describe("App", () => {
     toggleButtons[0].click();
 
     expect(await screen.findByText("First todo")).toHaveClass("done");
+
+    expect(global.fetch).toHaveBeenLastCalledWith(
+      expect.stringMatching(/1\/toggle/),
+      expect.anything()
+    );
   });
 });
+
